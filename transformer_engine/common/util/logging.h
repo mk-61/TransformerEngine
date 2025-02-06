@@ -12,6 +12,11 @@
 #include <cudnn.h>
 #include <nvrtc.h>
 
+#ifdef NVTE_WITH_CUBLASMP
+#include <cal.h>
+#include <cublasmp.h>
+#endif  // NVTE_WITH_CUBLASMP
+
 #include <stdexcept>
 
 #include "../util/string.h"
@@ -71,6 +76,7 @@
     }                                                                \
   } while (false)
 
+
 #define NVTE_CHECK_NVRTC(expr)                                                   \
   do {                                                                           \
     const nvrtcResult status_NVTE_CHECK_NVRTC = (expr);                          \
@@ -78,5 +84,25 @@
       NVTE_ERROR("NVRTC Error: ", nvrtcGetErrorString(status_NVTE_CHECK_NVRTC)); \
     }                                                                            \
   } while (false)
+
+#ifdef NVTE_WITH_CUBLASMP
+
+#define NVTE_CHECK_CUBLASMP(expr)             \
+  do {                                        \
+    const cublasMpStatus_t status = (expr);   \
+    if (status != CUBLASMP_STATUS_SUCCESS) {  \
+      NVTE_ERROR("cuBLASMp Error: ", status); \
+    }                                         \
+  } while (false)
+
+#define NVTE_CHECK_CAL(expr)             \
+  do {                                   \
+    const calError_t status = (expr);    \
+    if (status != CAL_OK) {              \
+      NVTE_ERROR("CAL Error: ", status); \
+    }                                    \
+  } while (false)
+
+#endif  // NVTE_WITH_CUBLASMP
 
 #endif  // TRANSFORMER_ENGINE_COMMON_UTIL_LOGGING_H_
