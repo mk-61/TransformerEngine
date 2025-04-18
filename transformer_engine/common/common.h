@@ -209,7 +209,12 @@ TRANSFORMER_ENGINE_TYPE_NAME(__nv_fp8_e8m0)
 
 template <typename T>
 struct TypeInfo {
-  using types = std::tuple<byte, int32, int64, fp32, fp16, bf16, fp8e4m3, fp8e5m2>;
+  using types = std::tuple<byte, int32, int64, fp32, fp16, bf16, fp8e4m3, fp8e5m2
+#if CUDA_VERSION >= 12080
+                           ,
+                           fp8e8m0
+#endif
+                           >;
 
   template <typename U, DType current>
   struct Helper {
